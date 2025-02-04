@@ -4,24 +4,14 @@
  * @date 4 February 2025
  */
 
-#include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include <signal.h>
-
-int childCount = 0;
-
-void printStopMessage();
-void handleSigInt(int s);
 
 int main()
 {
-    // We want to handle SIGINT graciously.
-    signal(SIGINT, handleSigInt);
-
     pid_t pid;
 
     while (1)
@@ -38,28 +28,18 @@ int main()
         else if (pid > 0)
         {
             // Parent process
-            childCount++;
             sync();
         }
         else
         {
             // Error
             const int err = errno;
+            sleep(0.5);
             fflush(stdout);
-            printStopMessage();
-            fprintf(stderr, "Forking failed: %d %s\n", err, strerror(err));
+            fprintf(stderr, "\nError during fork: %d %s\n", err, strerror(err));
             exit(EXIT_FAILURE);
         }
     }
 
     return EXIT_SUCCESS;
-}
-
-void printStopMessage() {
-    printf("\nTotal children: %d\n", childCount);
-}
-
-void handleSigInt(int s) {
-    printStopMessage();
-    exit(EXIT_SUCCESS);
 }
