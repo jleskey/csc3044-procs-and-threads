@@ -32,8 +32,8 @@ int main()
         {
             // Child process
             printf("New child process: %d\n", getpid());
-            // Avoid much suffering.
-            exit(EXIT_SUCCESS);
+            // We don't want child processes to loop.
+            break;
         }
         else if (pid > 0)
         {
@@ -45,6 +45,7 @@ int main()
         {
             // Error
             const int err = errno;
+            fflush(stdout);
             printStopMessage();
             fprintf(stderr, "Forking failed: %d %s\n", err, strerror(err));
             exit(EXIT_FAILURE);
