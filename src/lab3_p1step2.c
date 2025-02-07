@@ -65,7 +65,6 @@ int main(int argc, char const *argv[])
             const int err = errno;
             sleep(0.5);
             fflush(stdout);
-            fprintf(stderr, "\nError during fork: %d %s\n", err, strerror(err));
             perror("main");
             exit(EXIT_FAILURE);
         }
